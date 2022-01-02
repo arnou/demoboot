@@ -1,8 +1,9 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.2'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id 'java'
-	id 'maven-publish'
+    id 'org.springframework.boot' version '2.6.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'signing'
+    id 'maven-publish'
 }
 
 group = 'fr.cnieg'
@@ -10,35 +11,55 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
-	useJUnitPlatform()
+    useJUnitPlatform()
+}
+
+signing {
+    if (project.hasProperty('SIGNING_PRIVATE_KEY') && project.hasProperty('SIGNING_PASSWORD')) {
+        println 'Found signing credentials. Signing...'
+        useInMemoryPgpKeys(project.getProperty('SIGNING_PRIVATE_KEY'), project.getProperty('SIGNING_PASSWORD'))
+        println 'Used useInMemoryPgpKeys()'
+    }
 }
 
 publishing {
-	repositories {
-		maven {
-			name = "OSSRH"
-			url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-			credentials {
-				username = System.getenv("MAVEN_USERNAME")
-				password = System.getenv("MAVEN_PASSWORD")
-			}
-		}
-		maven {
-			name = "GitHubPackages"
-			url = "https://maven.pkg.github.com/arnou/demoboot"
-			credentials {
-				username = System.getenv("GITHUB_ACTOR")
-				password = System.getenv("GITHUB_TOKEN")
-			}
-		}
-	}
+    publications {
+        mavenJava(MavenPublication) {
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "OSSRH"
+            url = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/arnou/demoboot"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }
