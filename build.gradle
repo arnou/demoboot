@@ -71,3 +71,13 @@ signing {
 tasks.withType(Sign) {
     onlyIf { isReleaseVersion }
 }
+
+jar {
+    enabled = false
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
