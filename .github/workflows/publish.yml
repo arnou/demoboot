@@ -1,6 +1,5 @@
 name: Debug
 on: [push,pull_request,release]
-
 jobs:
   build:
     runs-on: ubuntu-latest
