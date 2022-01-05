@@ -23,12 +23,12 @@ jobs:
       - name: Build
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: build -is
       - name: Publish
         uses: gradle/gradle-build-action@v2
         #if: ${{ github.ref == 'refs/heads/main' }}
         with:
-          arguments: publish
+          arguments: publish -is
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
