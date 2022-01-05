@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'fr.cnieg'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.2-SNAPSHOT'
 sourceCompatibility = '11'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
@@ -48,8 +48,8 @@ publishing {
             def snapshotRepo = "https://oss.sonatype.org/content/repositories/snapshots/"
             url = isReleaseVersion ? releaseRepo : snapshotRepo
             credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+                username = System.getenv("OSSRH_USERNAME")
+                password = System.getenv("OSSRH_PASSWORD")
             }
         }
         maven {
